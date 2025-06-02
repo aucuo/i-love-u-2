@@ -1,0 +1,144 @@
+
+$breakpoints: (
+    'phone': 480px,
+    'tablet': 768px,
+    'desktop': 991px,
+    'medium': 1100px,
+    'large': 1200px,
+    'xl': 1300px,
+    'xxl': 1500px
+);
+
+@mixin respond-to($breakpoint) {
+    @if map-has-key($breakpoints, $breakpoint) {
+        @media (max-width: map-get($breakpoints, $breakpoint)) {
+            @content;
+        }
+    } @else {
+        @warn "Unknown breakpoint: #{$breakpoint}";
+    }
+}
+
+// Использование:
+// .element { @include respond-to('tablet') { ... } }
+
+@mixin center($position: both) {
+    position: absolute;
+
+    @if $position == 'both' {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    @else if $position == 'horizontal' {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    @else if $position == 'vertical' {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@mixin pin($top: 0, $right: 0, $bottom: 0, $left: 0) {
+    position: fixed;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+}
+
+@mixin text-ellipsis($lines: 1) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    @if $lines == 1 {
+        white-space: nowrap;
+    } @else {
+        display: -webkit-box;
+        -webkit-line-clamp: $lines;
+        -webkit-box-orient: vertical;
+        white-space: normal;
+    }
+}
+
+@mixin text-style($weight: 400, $size: 14px, $line-height: 18px, $color: inherit) {
+    font-weight: $weight;
+    font-size: $size;
+    line-height: $line-height;
+    color: $color;
+}
+
+@mixin fluid-font($min-size, $max-size, $min-width: 320px, $max-width: 1200px) {
+    font-size: clamp(
+        #{$min-size},
+        calc(#{$min-size} + (#{$max-size} - #{$min-size}) * ((100vw - #{$min-width}) / (#{$max-width} - #{$min-width}))),
+        #{$max-size}
+    );
+}
+
+@mixin pseudo($content: '', $display: block, $pos: absolute) {
+    content: $content;
+    display: $display;
+    position: $pos;
+}
+
+@mixin button-reset {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+@mixin button-style($bg, $color, $hover-bg: darken($bg, 10%)) {
+    background: $bg;
+    color: $color;
+    transition: background 0.3s;
+
+    &:hover {
+        background: $hover-bg;
+    }
+}
+
+@mixin flex($justify: flex-start, $align: stretch, $direction: row, $wrap: nowrap) {
+    display: flex;
+    justify-content: $justify;
+    align-items: $align;
+    flex-direction: $direction;
+    flex-wrap: $wrap;
+}
+
+@mixin grid($columns: 12, $gap: 20px) {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+    gap: $gap;
+}
+
+@mixin visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+@mixin linear-border($linear-gradient: linear-gradient(216.97deg, rgba(255, 255, 255, 0) 10.88%, #FFFFFF 48.93%, rgba(255, 255, 255, 0) 90.16%)) {
+    background-image: linear-gradient(#0B160A, #0B160A), $linear-gradient;
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+}
+
+@mixin blured-circle($top: unset, $left: unset, $size: 800px) {
+    @include pseudo();
+    top: $top;
+    left: $left;
+    width: $size;
+    height: $size;
+    background-color: #90C539;
+    border-radius: 50%;
+    filter: blur(400px);
+}
